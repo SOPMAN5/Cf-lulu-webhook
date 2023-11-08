@@ -1,6 +1,8 @@
+const cofig = require("dotenv").config()
 const myCache = require("../utils/cache");
 const axios = require("axios");
 const axiosApiInstance = require("../utils/axiosInterceptors");
+
 const handler = {};
 const BASE_URL = "https://api.sandbox.lulu.com";
 handler.refreshAccessToken = async (req, res) => {
@@ -12,7 +14,7 @@ handler.refreshAccessToken = async (req, res) => {
 		{
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
-				Authorization: "Basic YmFmNTE2OGEtMzU1ZS00OGEwLWFjYjAtMWYwNjU3NTA5Yzc2OlJ5NlJ0VFc5bWQxQmY2WTZ3RkVPczZrVWJpYXNNbmZp",
+				Authorization: `Basic ${process.env.ACCESS_TOKEN} `,
 			},
 		}
 	);
@@ -44,6 +46,7 @@ handler.createOrder = async (req, res) => {
 };
 
 handler.createPrintJobs = async(req,res)=>{
+    console.log(process.env.ACCESS_TOKEN )
     return{
         status:true,
         data:{}
