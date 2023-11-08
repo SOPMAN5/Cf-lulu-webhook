@@ -45,8 +45,9 @@ handler.createOrder = async (req, res) => {
 	}
 };
 
-handler.createPrintJobs = async(req,res)=>{
+handler.createPrintJobs = async(data)=>{
     console.log(process.env.ACCESS_TOKEN )
+    console.log(data)
     return{
         status:true,
         data:{}

@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "node src/api.js",
     "start": "netlify-lambda serve src",
-    "build": "NODE_ENV=production netlify-lambda build src"
+    "build": " netlify-lambda build src"
   },
   "repository": {
     "type": "git",
