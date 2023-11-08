@@ -1,7 +1,8 @@
-const cofig = require("dotenv").config()
+const cofig = require("dotenv").config();
 const myCache = require("../utils/cache");
 const axios = require("axios");
 const axiosApiInstance = require("../utils/axiosInterceptors");
+const buildPrintJobs = require("../utils/buildPrintJob");
 
 const handler = {};
 const BASE_URL = "https://api.sandbox.lulu.com";
@@ -18,15 +19,15 @@ handler.refreshAccessToken = async (req, res) => {
 			},
 		}
 	);
-    const {data} = response;
+	const { data } = response;
 	return data;
 };
 
 handler.createOrder = async (req, res) => {
 	let accessToken = myCache.get("accesstoken");
 	if (accessToken === undefined) {
-		let {access_token} = await handler.refreshAccessToken();
-        
+		let { access_token } = await handler.refreshAccessToken();
+
 		myCache.set("accesstoken", access_token);
 	}
 	const url = BASE_URL + "/" + "print-jobs";
@@ -45,12 +46,24 @@ handler.createOrder = async (req, res) => {
 	}
 };
 
-handler.createPrintJobs = async(data)=>{
-    console.log(process.env.ACCESS_TOKEN )
-    console.log(JSON.stringify(data))
-    return{
-        status:true,
-        data:{}
+handler.createPrintJobs = async (order) => {
+	console.log(process.env.ACCESS_TOKEN);
+	console.log(JSON.stringify(data));
+    const url = BASE_URL + 'print-jobs'
+	const order_details = await buildPrintJobs(order);
+    try {
+      const result =axiosApiInstance.post(url,order_details);
+      console.log(result.data)
+      return {
+		status: true,
+		data: {},
+	};  
+    } catch (error) {
+        return {
+            status: false,
+            data: {},
+        };
     }
-}
+	
+};
 module.exports = handler;
