@@ -1,5 +1,6 @@
 const express = require('express');
 const app =  express();
+const serverless = require("serverless-http");
 const cors = require('cors');
 var axios = require('axios');
 const routes = require("./routes/index")
@@ -14,4 +15,8 @@ let allowCrossDomain = function(req, res, next) {
   }
  app.use(allowCrossDomain);
 app.use(routes)
- module.exports = app;
+const PORT = process.env.port || 3005
+app.listen(PORT,()=>console.log('Server is running'));
+process.on('unhandledRejection',(err)=>{console.log(err)})
+module.exports = app;
+module.exports.handler = serverless(app);

@@ -13,6 +13,6 @@ router.get("/funnel_webhooks/test",async(req,res)=>{
 }) 
 router.post("/funnel_webhooks/print-jobs",createPrintJobs); 
 router.get("/print-jobs",createOrder)
-router.use(`/.netlify/functions/server`, router);
+router.use(`/.netlify/functions/api`, router);
 
 module.exports = router
