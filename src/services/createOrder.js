@@ -47,7 +47,7 @@ handler.createOrder = async (req, res) => {
 
 handler.createPrintJobs = async(data)=>{
     console.log(process.env.ACCESS_TOKEN )
-    console.log(data)
+    console.log(JSON.stringify(data))
     return{
         status:true,
         data:{}
