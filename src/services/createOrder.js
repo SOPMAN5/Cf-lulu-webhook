@@ -1,7 +1,7 @@
 const cofig = require("dotenv").config();
 const myCache = require("../utils/cache");
 const axios = require("axios");
-const axiosApiInstance = require("../utils/axiosInterceptors");
+const customAxios = require("../utils/axiosInterceptors");
 const buildPrintJobs = require("../utils/buildPrintJob");
 
 const handler = {};
@@ -15,7 +15,7 @@ handler.refreshAccessToken = async (req, res) => {
 		{
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
-				Authorization: `Basic ${process.env.ACCESS_TOKEN} `,
+				Authorization: `Basic ${process.env.ACCESS_TOKEN}`,
 			},
 		}
 	);
@@ -32,7 +32,7 @@ handler.createOrder = async (req, res) => {
 	}
 	const url = BASE_URL + "/" + "print-jobs";
 	try {
-		const result = await axiosApiInstance.get(url);
+		const result = await customAxios().get(url);
 		console.log(result);
 		return {
 			data: result.data,
@@ -48,20 +48,28 @@ handler.createOrder = async (req, res) => {
 
 handler.createPrintJobs = async (order) => {
 	console.log(process.env.ACCESS_TOKEN);
-	console.log(JSON.stringify(data));
-    const url = BASE_URL + 'print-jobs'
-	const order_details = await buildPrintJobs(order);
+	// console.log(JSON.stringify(data));
+    let accessToken = myCache.get("accesstoken");
+	if (accessToken === undefined) {
+		let { access_token } = await handler.refreshAccessToken();
+
+		myCache.set("accesstoken", access_token);
+	}
+    const url = 'https://api.sandbox.lulu.com' + '/'+ 'print-jobs/'
+	
+	const order_detail = await buildPrintJobs(order);
     try {
-      const result =axiosApiInstance.post(url,order_details);
+      const result = await customAxios('application/json').post(url,order_detail);
       console.log(result.data)
       return {
 		status: true,
 		data: {},
 	};  
     } catch (error) {
+        console.log(JSON.stringify(error))
         return {
             status: false,
-            data: {},
+            data:error,
         };
     }
 	

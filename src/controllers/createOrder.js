@@ -7,7 +7,7 @@ const printJobs = require("../services/createOrder");
 	return res.status(statusCode).json(result);
 };
 const createPrintJobs = async (req, res) => {
-	const data = { data: req.body };
+	const data =  req.body ;
 	const result = await printJobs.createPrintJobs(data);
 	const statusCode = result.status ? 200 : 400;
 	return res.status(statusCode).json(result);
